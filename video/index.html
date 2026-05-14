@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OASIS - Editorial Minimalism</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg: #FAF9F6; /* Warm, editorial paper-white */
+            --fg: #1C1C1A; /* Soft charcoal */
+            --text-secondary: rgba(28, 28, 26, 0.6);
+            --accent: #C27E5F; /* Muted terracotta */
+            --line: rgba(28, 28, 26, 0.1);
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            width: 1920px; height: 1080px;
+            background: var(--bg); color: var(--fg);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; box-sizing: border-box;
+        }
+
+        #root {
+            width: 1920px; height: 1080px; position: relative;
+            background: var(--bg); overflow: hidden;
+        }
+
+        /* Subtle paper grain */
+        .grain { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E'); opacity: 0.03; pointer-events: none; z-index: 9999; }
+
+        .scene {
+            position: absolute; top: 0; left: 0; width: 1920px; height: 1080px;
+            display: none; justify-content: center; align-items: center; flex-direction: column; text-align: center; z-index: 10;
+        }
+
+        .scene-content { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 1200px; }
+
+        /* Claude-like Editorial Typography */
+        h1.serif { font-family: 'Newsreader', serif; font-size: 5rem; font-weight: 300; letter-spacing: -0.01em; margin: 0; color: var(--fg); line-height: 1.1; text-transform: none; }
+        h1.serif.italic { font-style: italic; font-weight: 300; }
+        h1.massive { font-family: 'Newsreader', serif; font-size: 8rem; font-weight: 200; letter-spacing: -0.02em; margin-bottom: 0.2em; }
+        
+        p.body-text { font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 300; color: var(--text-secondary); margin-top: 2rem; max-width: 800px; line-height: 1.6; }
+        
+        .eyebrow { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+
+        /* Elegant Minimalist Graph */
+        .graph-container { width: 800px; height: 250px; margin-bottom: 3rem; position: relative; }
+        .graph-path { stroke-dasharray: 2000; stroke-dashoffset: 2000; stroke: var(--accent); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+        .graph-grid { stroke: var(--line); stroke-width: 1; }
+
+        /* Minimalist Bar Chart */
+        .chart-container { display: flex; align-items: flex-end; justify-content: center; gap: 120px; height: 350px; width: 800px; margin-bottom: 3rem; border-bottom: 1px solid var(--line); }
+        .bar-wrap { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; width: 120px; }
+        .bar { width: 80px; background: var(--line); transform-origin: bottom center; transform: scaleY(0); }
+        .bar.accent { background: var(--accent); }
+        .bar-label { font-size: 1.1rem; font-weight: 400; margin-top: 1.5rem; color: var(--text-secondary); }
+        .bar-value { font-family: 'Newsreader', serif; font-size: 2.5rem; font-weight: 300; margin-bottom: 1rem; opacity: 0; transform: translateY(10px); }
+
+        /* Word by word */
+        .word { display: inline-block; opacity: 0; margin: 0 0.12em; }
+    </style>
+</head>
+<body>
+    <div id="root" data-composition-id="root" data-width="1920" data-height="1080" data-start="0" data-duration="50">
+        <audio id="narration" src="narration_global.wav" data-start="0" data-duration="48.8" data-volume="1" data-track-index="0"></audio>
+        <audio id="bg-music" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" data-start="0" data-duration="50" data-volume="0.05" data-track-index="1"></audio>
+
+        <div class="grain"></div>
+
+        <!-- SCENE 1: Global Deaths 2026 (0-9s) -->
+        <div id="scene1" class="scene">
+            <div class="scene-content">
+                <div class="eyebrow">2026 Projection</div>
+                <h1 class="massive" id="death-counter">0</h1>
+                <p class="body-text">Annual global heat-related casualties.</p>
+            </div>
+        </div>
+
+        <!-- SCENE 2: The AC Feedback Loop (9-17s) -->
+        <div id="scene2" class="scene">
+            <div class="scene-content">
+                <div class="graph-container">
+                    <svg width="800" height="250" viewBox="0 0 800 250">
+                        <line x1="0" y1="200" x2="800" y2="200" class="graph-grid"/>
+                        <line x1="0" y1="100" x2="800" y2="100" class="graph-grid"/>
+                        <path class="graph-path" id="ac-line" d="M 0 200 Q 300 190, 500 120 T 800 20" />
+                    </svg>
+                </div>
+                <h1 class="serif">The carbon feedback loop.</h1>
+                <p class="body-text">Global cooling demand is surging towards 4,500 TWh, straining power grids.</p>
+            </div>
+        </div>
+
+        <!-- SCENE 3: Reveal OASIS (17-22s) -->
+        <div id="scene3" class="scene">
+            <div class="scene-content">
+                <h1 class="serif italic" style="font-size: 7rem;">Oasis</h1>
+                <p class="body-text">An off-grid, globally scalable autonomous shelter.</p>
+            </div>
+        </div>
+
+        <!-- SCENE 4: Technology (22-29s) -->
+        <div id="scene4" class="scene">
+            <div class="scene-content">
+                <h1 class="serif">Zero compressors.</h1>
+                <p class="body-text" style="max-width: 600px;">A Phase Change Material thermal battery, managed entirely by Edge AI.</p>
+            </div>
+        </div>
+
+        <!-- SCENE 5: Zero Grid (29-33s) -->
+        <div id="scene5" class="scene">
+            <div class="scene-content">
+                <h1 class="massive" style="color: var(--accent);">0%</h1>
+                <p class="body-text">Grid reliance. Powered by a localized solar microgrid.</p>
+            </div>
+        </div>
+
+        <!-- SCENE 6: Impact Bar Chart (33-43s) -->
+        <div id="scene6" class="scene">
+            <div class="scene-content">
+                <div class="eyebrow">Daily Energy Footprint</div>
+                <div class="chart-container">
+                    <div class="bar-wrap">
+                        <div class="bar-value" id="val-ac">15 <span style="font-size:1.2rem">kWh</span></div>
+                        <div class="bar" id="bar-ac" style="height: 95%;"></div>
+                        <div class="bar-label">Traditional AC</div>
+                    </div>
+                    <div class="bar-wrap">
+                        <div class="bar-value" style="color: var(--accent);" id="val-oasis">< 1 <span style="font-size:1.2rem">kWh</span></div>
+                        <div class="bar accent" id="bar-oasis" style="height: 5%;"></div>
+                        <div class="bar-label">Oasis Pod</div>
+                    </div>
+                </div>
+                <h1 class="serif" style="font-size: 3rem;">A 95% reduction in energy.</h1>
+            </div>
+        </div>
+
+        <!-- SCENE 7: Kinetic Typography CTA (43-49s) -->
+        <div id="scene7" class="scene">
+            <div class="scene-content">
+                <h1 class="serif" style="max-width: 900px; line-height: 1.3;">
+                    <span class="word w-0">Cooling</span>
+                    <span class="word w-1">is</span>
+                    <span class="word w-2">no</span>
+                    <span class="word w-3">longer</span>
+                    <span class="word w-4">a</span>
+                    <span class="word w-5">luxury.</span>
+                    <br>
+                    <span class="word w-6" style="color: var(--accent);">It</span>
+                    <span class="word w-7" style="color: var(--accent);">is</span>
+                    <span class="word w-8" style="color: var(--accent);">a</span>
+                    <span class="word w-9" style="color: var(--accent);">global</span>
+                    <span class="word w-10" style="color: var(--accent);">human</span>
+                    <span class="word w-11" style="color: var(--accent);">right.</span>
+                </h1>
+                <p id="final-cta" class="eyebrow" style="margin-top: 4rem; opacity: 0; color: var(--fg);">Join the revolution.</p>
+            </div>
+        </div>
+
+        <script>
+            window.__timelines = window.__timelines || {};
+            var tl = gsap.timeline({ paused: true });
+
+            // Minimalist slow crossfades instead of dramatic velocity jumps
+            function editorialFade(outScene, inScene, time) {
+                if (outScene) {
+                    tl.to(outScene, { opacity: 0, duration: 1.5, ease: "sine.inOut" }, time - 0.5);
+                    tl.set(outScene, { display: "none", visibility: "hidden" }, time + 1.0);
+                }
+                tl.set(inScene, { display: "flex", visibility: "visible", opacity: 0 }, time);
+                tl.to(inScene, { opacity: 1, duration: 1.5, ease: "sine.inOut" }, time);
+                // Very subtle upward drift for elegance
+                tl.fromTo(inScene + " .scene-content", { y: 15 }, { y: -5, duration: 4, ease: "power1.out" }, time);
+            }
+
+            // Scene 1
+            tl.set("#scene1", { display: "flex", opacity: 0 }, 0);
+            tl.to("#scene1", { opacity: 1, duration: 1.5, ease: "sine.inOut" }, 0);
+            tl.fromTo("#scene1 .scene-content", { y: 15 }, { y: -5, duration: 4, ease: "power1.out" }, 0);
+            
+            var deaths = { val: 0 };
+            tl.to(deaths, { val: 500000, duration: 2.5, ease: "power2.out", onUpdate: function() {
+                document.getElementById("death-counter").innerText = Math.round(deaths.val).toLocaleString() + "+";
+            }}, 3.5);
+
+            // Scene 2
+            editorialFade("#scene1", "#scene2", 9.0);
+            tl.to("#ac-line", { strokeDashoffset: 0, duration: 3, ease: "power1.inOut" }, 10.0);
+
+            // Scene 3
+            editorialFade("#scene2", "#scene3", 17.0);
+
+            // Scene 4
+            editorialFade("#scene3", "#scene4", 22.0);
+
+            // Scene 5
+            editorialFade("#scene4", "#scene5", 29.0);
+
+            // Scene 6
+            editorialFade("#scene5", "#scene6", 33.0);
+            tl.to("#bar-ac", { scaleY: 1, duration: 1.5, ease: "power2.out" }, 34.0);
+            tl.to("#val-ac", { y: 0, opacity: 1, duration: 1, ease: "sine.out" }, 34.5);
+            tl.to("#bar-oasis", { scaleY: 1, duration: 1.5, ease: "power2.out" }, 36.5);
+            tl.to("#val-oasis", { y: 0, opacity: 1, duration: 1, ease: "sine.out" }, 37.0);
+
+            // Scene 7
+            editorialFade("#scene6", "#scene7", 43.0);
+            var words = document.querySelectorAll("#scene7 .word");
+            var t = [0, 0.3, 0.5, 0.7, 1.0, 1.2,   1.8, 2.0, 2.2, 2.4, 2.6, 2.8];
+            words.forEach(function(w, i) {
+                // Gentle fade, no dramatic jumping
+                tl.fromTo(w, { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "sine.inOut" }, 43.5 + t[i]);
+            });
+            tl.to("#final-cta", { opacity: 1, duration: 1.5, ease: "sine.inOut" }, 46.5);
+
+            window.__timelines["root"] = tl;
+        </script>
+    </div>
+</body>
+</html>
