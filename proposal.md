@@ -30,22 +30,22 @@ All thermal dynamics, AI logic, and power economics were rigorously modeled and 
 ### A. Passive Cooling & Thermal Mass Modeling
 We simulated diurnal temperature swings (Lucknow peak 45°C, low 30°C) for a 24-hour cycle using a sine-wave ambient model with 800 W/m² solar flux. The shelter parameters used R-value = 2.5, MgO-PVDF radiative cooling power of 100 W/m² (95% solar rejection), and PCM mass of 50 kg/m² with latent heat of 200 kJ/kg (total capacity of 10,000 kJ/m²). The simulation proves the PCM successfully absorbs the 12-hour thermal load, locking internal temperature at a safe 28°C despite 45°C ambient heat.
 
-![OASIS Shelter 2.0: 24-Hour Passive Cooling Performance](./graph_1_passive_cooling.png)
+![OASIS Shelter 2.0: 24-Hour Passive Cooling Performance](./source/graph_1_passive_cooling.png)
 
 ### B. The Humidity Crisis: Why Dry Bulb Temperature is Not Enough
 A critical finding emerged when we simulated the shelter under real occupancy conditions. With 8 humans inside (each radiating ~100W of metabolic heat) and ambient humidity ranging from 30% to 70%, the PCM maintained the dry-bulb temperature at 28°C. However, the "Feels Like" Heat Index—calculated using the full psychrometric Magnus-Tetens formula—spiked above the 35°C danger threshold. This proves that sensible cooling alone is insufficient during Indian monsoons; latent heat (humidity) must also be managed.
 
-![OASIS 3.0: Performance with 8 Humans & Humidity - Heat Index Spikes Above Danger Threshold](./graph_2b_humans_heatindex.png)
+![OASIS 3.0: Performance with 8 Humans & Humidity - Heat Index Spikes Above Danger Threshold](./source/graph_2b_humans_heatindex.png)
 
 ### C. The Desiccant-PCM Stack: Beating the Monsoon Latent Load
 To solve the humidity crisis, we simulated an extreme monsoon edge-case (Lucknow, 50-90% RH, 27-37°C ambient). We modeled a 2-stage system: (1) a desiccant scrubber removing 60% of moisture from the incoming air, and (2) the PCM thermal battery cooling the dehumidified air back to 28°C. Despite the thermodynamic paradox where removing water releases latent heat (superheating the air), the PCM successfully re-cools the air, and the final Heat Index stays below the 35°C danger threshold—and even below the 30°C comfort threshold during most hours. Without the desiccant, the standard PCM-only shelter would exceed 35°C HI for 12+ hours a day.
 
-![Extreme Edge Case: Beating the Lucknow Monsoon Latent Load](./graph_3_monsoon.png)
+![Extreme Edge Case: Beating the Lucknow Monsoon Latent Load](./source/graph_3_monsoon.png)
 
 ### D. Economic Sweet Spot Optimization
 To ensure feasibility for low-income applications, we ran a multi-variable parametric sweep mapping PCM Mass (10-50 kg/m²) against Wall Insulation R-Value (0.5-3.0). This heatmap reveals the "economic sweet spot": the minimum material cost that still guarantees a 28°C internal max temperature. The optimizer found that 30 kg/m² PCM with R-2.0 insulation achieves the target—proving the shelter can be built with affordable, globally available materials.
 
-![Optimization: Finding the 'Economic Sweet Spot'](./graph_4_optimization.png)
+![Optimization: Finding the 'Economic Sweet Spot'](./source/graph_4_optimization.png)
 
 ### E. Power System Sizing & Cost Analysis
 The entire active system—ESP32 (1.5W), two 30W intake fans (8 hrs/night), desiccant fan (20W, 12 hrs/day), and servo (5W, peak)—consumes only **756.50 Watt-hours per day**. This low energy footprint means the system can be powered by a single **218.54W solar panel** and a **157.60 Ah 12V LiFePO4 battery** (with 2 days of autonomy and 80% depth of discharge).
