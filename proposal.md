@@ -4,7 +4,7 @@
 ## 1. Executive Summary
 In regions experiencing severe climate shifts, extreme summer temperatures (often exceeding 45°C) combined with heavy monsoon humidity create deadly "Heat Index" conditions. Traditional Air Conditioning is unviable for emergency and low-income shelters because it demands massive amounts of continuous power and relies on a stable electrical grid—which frequently fails during peak heat waves.
 
-**OASIS** is an off-grid, 10-person emergency shelter designed to replace power-hungry refrigeration cycles with smart thermal physics and Edge AI. Operating entirely on a highly efficient 12V solar microgrid, the OASIS Pod utilizes a passive Phase Change Material (PCM) thermal battery managed by an autonomous ESP32 microcontroller to maintain safe internal temperatures.
+**OASIS** is a scalable, off-grid emergency shelter designed to replace power-hungry refrigeration cycles with smart thermal physics and Edge AI. Operating entirely on a highly efficient 12V solar microgrid, the OASIS Pod utilizes a passive Phase Change Material (PCM) thermal battery managed by an autonomous ESP32 microcontroller to maintain safe internal temperatures.
 
 ---
 
@@ -50,7 +50,7 @@ To ensure feasibility for low-income applications, we ran a multi-variable param
 ### E. Power System Sizing & Cost Analysis
 The entire active system—ESP32 (1.5W), two 30W intake fans (8 hrs/night), desiccant fan (20W, 12 hrs/day), and servo (5W, peak)—consumes only **756.50 Watt-hours per day**. This low energy footprint means the system can be powered by a single **218.54W solar panel** and a **157.60 Ah 12V LiFePO4 battery** (with 2 days of autonomy and 80% depth of discharge).
 
-**Estimated Bill of Materials (per 10-person pod):**
+**Estimated Bill of Materials (Example Baseline Unit):**
 | Component | Cost (USD) | Cost (INR) |
 |-----------|-----------|-----------|
 | Solar Panels (mono, 220W) | ~$79 | ₹6,556 |
