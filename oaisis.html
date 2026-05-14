@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OASIS Shelter - Interactive Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #0a0a0c;
-            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0d0d0d;
+            color: #ededed;
         }
 
         canvas {
@@ -21,100 +22,155 @@
 
         #ui-container {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 40px;
+            left: 40px;
             z-index: 10;
-            background: rgba(15, 15, 18, 0.85);
-            padding: 25px;
+            background: rgba(18, 18, 18, 0.75);
+            padding: 32px;
             border-radius: 12px;
-            border: 1px solid #333;
-            max-width: 350px;
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            max-width: 340px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
         }
 
         h1 {
-            margin: 0 0 5px 0;
-            font-size: 24px;
-            font-weight: 700;
-            color: #fff;
+            margin: 0 0 6px 0;
+            font-size: 22px;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: -0.02em;
         }
 
         .subtitle {
-            color: #4CAF50;
-            font-size: 12px;
+            color: #888888;
+            font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
+            letter-spacing: 0.08em;
+            margin-bottom: 20px;
             display: block;
-            font-weight: bold;
+            font-weight: 500;
         }
 
         p {
-            color: #aaa;
-            font-size: 13px;
+            color: #999999;
+            font-size: 14px;
             line-height: 1.5;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            font-weight: 400;
         }
 
         .btn-group {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 6px;
+            margin-bottom: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
 
         .control-btn {
             flex: 1;
             padding: 10px;
-            background: #222;
-            color: white;
-            border: 1px solid #444;
+            background: transparent;
+            color: #888888;
+            border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
-            font-weight: bold;
-            transition: 0.3s;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-family: inherit;
         }
 
         .control-btn:hover {
-            background: #333;
+            color: #cccccc;
         }
 
         .control-btn.active {
-            background: #4CAF50;
-            border-color: #4CAF50;
-            color: #000;
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .state-btn {
-            display: block;
+            display: flex;
+            align-items: center;
             width: 100%;
-            padding: 12px;
+            padding: 14px 16px;
             margin-bottom: 8px;
-            background: #1a1a24;
-            color: #ddd;
-            border: 1px solid #333;
-            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            color: #999999;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
             cursor: pointer;
             font-size: 13px;
+            font-weight: 500;
             text-align: left;
-            transition: 0.2s;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .state-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #dddddd;
         }
 
         .state-btn.active {
-            border-left: 4px solid #4CAF50;
-            background: #152218;
-            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .state-btn span {
+            margin-right: 12px;
+            font-size: 16px;
+            opacity: 0.7;
+        }
+
+        .state-btn.active span {
+            opacity: 1;
         }
 
         .hardware-status {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 6px;
-            background: #111;
-            font-size: 12px;
-            color: #ccc;
-            line-height: 1.4;
-            border-left: 3px solid #888;
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 13px;
+            color: #999999;
+            line-height: 1.6;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            font-weight: 400;
+            transition: all 0.3s ease;
+        }
+
+        .hardware-status strong {
+            color: #ffffff;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        #loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0d0d0d;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            transition: opacity 0.5s ease;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -122,226 +178,960 @@
 </head>
 
 <body>
-
+    <div id="loading">Initializing Digital Twin...</div>
     <div id="ui-container">
         <h1>OASIS POD</h1>
-        <span class="subtitle">Human Scale Showcase</span>
-        <p>Demonstrating 10-person capacity, structural MgO-PVDF coating, and active thermal logic.</p>
+        <span class="subtitle">Digital Twin Prototype</span>
+        <p>10-person off-grid emergency shelter. PCM thermal battery + Edge AI. Withstands 45°C+ heat.</p>
 
         <div class="btn-group">
-            <button class="control-btn active" id="btn-view-out" onclick="setCamera('OUTSIDE')">Exterior View</button>
-            <button class="control-btn" id="btn-view-in" onclick="setCamera('INSIDE')">Enter Shelter</button>
+            <button class="control-btn active" id="btn-view-out" onclick="setCamera('OUTSIDE')">Exterior</button>
+            <button class="control-btn" id="btn-view-in" onclick="setCamera('INSIDE')">Interior</button>
         </div>
 
-        <div class="btn-group" style="margin-bottom: 20px;">
-            <button class="control-btn" id="btn-mat-real" onclick="setMaterial('REAL')">Realistic Walls</button>
-            <button class="control-btn active" id="btn-mat-xray" onclick="setMaterial('XRAY')">X-Ray (Hardware)</button>
+        <div class="btn-group" style="margin-bottom: 24px;">
+            <button class="control-btn" id="btn-mat-real" onclick="setMaterial('REAL')">MgO-PVDF Skin</button>
+            <button class="control-btn active" id="btn-mat-xray" onclick="setMaterial('XRAY')">X-Ray PCM Core</button>
         </div>
 
-        <button class="state-btn active" id="btn-idle" onclick="setState('IDLE')">☀️ IDLE (Passive Block)</button>
-        <button class="state-btn" id="btn-night" onclick="setState('NIGHT_FLUSH')">🌙 NIGHT FLUSH (Cooling)</button>
-        <button class="state-btn" id="btn-desic" onclick="setState('DESICCANT')">💧 DESICCANT (Dry Air)</button>
+        <button class="state-btn active" id="btn-idle" onclick="setState('IDLE')">
+            <span>☀️</span> Passive Block
+        </button>
+        <button class="state-btn" id="btn-night" onclick="setState('NIGHT_FLUSH')">
+            <span>🌙</span> Night Flush
+        </button>
+        <button class="state-btn" id="btn-desic" onclick="setState('DESICCANT')">
+            <span>💧</span> Latent Cooling
+        </button>
 
         <div class="hardware-status" id="status-box">
-            System Idle. Door Closed. Solid state PCM absorbing thermal load.
+            <strong>Status: Idle</strong><br>
+            Solid state Phase Change Material (PCM) is actively absorbing ambient thermal load. Internal temperature
+            stabilized at 28°C.
         </div>
     </div>
 
     <script>
-        // --- Setup Scene ---
+        window.addEventListener('error', function (e) {
+            document.getElementById('loading').innerHTML = 'Error: ' + e.message;
+            document.getElementById('loading').style.background = '#200';
+        });
+
+        const LOADING = document.getElementById('loading');
+        setTimeout(() => {
+            LOADING.style.opacity = '0';
+            setTimeout(() => LOADING.style.display = 'none', 500);
+        }, 300);
+
+        // === SCENE SETUP ===
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x0a0a0c, 0.015);
+        scene.background = new THREE.Color(0x87CEEB);
+        scene.fog = new THREE.Fog(0x87CEEB, 50, 100);
 
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        let renderer;
+        try {
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+        } catch (e) {
+            document.getElementById('loading').innerHTML = 'WebGL not supported. Please use a modern browser.';
+            document.getElementById('loading').style.background = '#000';
+            throw e;
+        }
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.body.appendChild(renderer.domElement);
 
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.maxPolarAngle = Math.PI / 2 - 0.05;
+        controls.dampingFactor = 0.15;
+        controls.rotateSpeed = 0.25;
+        controls.zoomSpeed = 0.5;
+        controls.maxPolarAngle = Math.PI / 2.2;
+        controls.minDistance = 0.2;
+        controls.maxDistance = 40;
+        controls.target.set(0, 1.5, 0);
 
-        // --- Lighting ---
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
+        // === ENVIRONMENT ===
+        // Ground
+        const groundGeo = new THREE.PlaneGeometry(120, 120);
+        const groundMat = new THREE.MeshStandardMaterial({
+            color: 0xc4a882,
+            roughness: 0.9,
+            metalness: 0.0
+        });
+        const ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
 
-        const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
-        sunLight.position.set(15, 25, 10);
-        sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 2048;
-        sunLight.shadow.mapSize.height = 2048;
-        scene.add(sunLight);
+        // Ground patch near shelter
+        const patchMat = new THREE.MeshStandardMaterial({ color: 0xb8a070, roughness: 1.0 });
+        const patch = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), patchMat);
+        patch.rotation.x = -Math.PI / 2;
+        patch.position.y = 0.01;
+        patch.receiveShadow = true;
+        scene.add(patch);
 
-        const interiorLight = new THREE.PointLight(0xffddaa, 0, 15);
-        interiorLight.position.set(0, 3, 0);
-        scene.add(interiorLight);
-
-        // --- Environment ---
-        const floor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.8 }));
-        floor.rotation.x = -Math.PI / 2;
-        floor.receiveShadow = true;
-        scene.add(floor);
-
-        const grid = new THREE.GridHelper(100, 50, 0x333333, 0x222222);
-        grid.position.y = 0.01;
-        scene.add(grid);
-
-        // --- Materials ---
-        // Real World Material: Solid white MgO-PVDF coating
-        const matReal = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, roughness: 0.3, metalness: 0.1 });
-        // Hackathon Material: Translucent Blue to show PCM and hardware
-        const matXray = new THREE.MeshPhysicalMaterial({ color: 0x88bbff, transparent: true, opacity: 0.3, roughness: 0.2, side: THREE.DoubleSide });
-
-        const matFrame = new THREE.MeshStandardMaterial({ color: 0x333333 });
-
-        // Array to hold wall meshes for toggling materials
-        const wallMeshes = [];
-
-        // --- Build Shelter ---
-        const podGroup = new THREE.Group();
-
-        // Floor & Roof
-        const podFloor = new THREE.Mesh(new THREE.BoxGeometry(10, 0.4, 8), matFrame);
-        podFloor.position.y = 0.2;
-        podFloor.receiveShadow = true;
-        podGroup.add(podFloor);
-
-        const podRoof = new THREE.Mesh(new THREE.BoxGeometry(10, 0.4, 8), matReal); // Roof is always solid
-        podRoof.position.y = 5.8;
-        podRoof.castShadow = true;
-        podGroup.add(podRoof);
-
-        // Walls (Left, Right, Back)
-        const wallLeft = new THREE.Mesh(new THREE.BoxGeometry(0.4, 5.2, 7.6), matXray);
-        wallLeft.position.set(-4.8, 3, 0);
-        wallLeft.castShadow = true;
-        wallMeshes.push(wallLeft);
-        podGroup.add(wallLeft);
-
-        const wallRight = new THREE.Mesh(new THREE.BoxGeometry(0.4, 5.2, 7.6), matXray);
-        wallRight.position.set(4.8, 3, 0);
-        wallRight.castShadow = true;
-        wallMeshes.push(wallRight);
-        podGroup.add(wallRight);
-
-        // Back Wall (Holds Hardware)
-        const wallBack = new THREE.Mesh(new THREE.BoxGeometry(9.2, 5.2, 0.4), matFrame);
-        wallBack.position.set(0, 3, -3.8);
-        wallBack.castShadow = true;
-        podGroup.add(wallBack);
-
-        // Front Wall Pieces (Leaving room for door)
-        const wallFrontLeft = new THREE.Mesh(new THREE.BoxGeometry(3, 5.2, 0.4), matXray);
-        wallFrontLeft.position.set(-3.3, 3, 3.8);
-        wallMeshes.push(wallFrontLeft);
-        podGroup.add(wallFrontLeft);
-
-        const wallFrontRight = new THREE.Mesh(new THREE.BoxGeometry(3, 5.2, 0.4), matXray);
-        wallFrontRight.position.set(3.3, 3, 3.8);
-        wallMeshes.push(wallFrontRight);
-        podGroup.add(wallFrontRight);
-
-        const wallFrontTop = new THREE.Mesh(new THREE.BoxGeometry(3.6, 1.2, 0.4), matXray);
-        wallFrontTop.position.set(0, 5, 3.8);
-        wallMeshes.push(wallFrontTop);
-        podGroup.add(wallFrontTop);
-
-        // --- Interactive Door/Gate ---
-        const doorGroup = new THREE.Group();
-        doorGroup.position.set(-1.8, 0.4, 3.8); // Position at the left hinge
-
-        // Offset the door mesh so it pivots on the edge
-        const doorMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 4, 0.2), new THREE.MeshStandardMaterial({ color: 0x555555 }));
-        doorMesh.position.set(1.8, 2, 0); // Shift right by half width
-        doorMesh.castShadow = true;
-
-        // Handle
-        const handle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.8, 0.3), new THREE.MeshStandardMaterial({ color: 0xaaaaaa }));
-        handle.position.set(3.2, 2, 0.1);
-        doorMesh.add(handle);
-
-        doorGroup.add(doorMesh);
-        podGroup.add(doorGroup);
-
-        // --- Hardware ---
-        const hardwareMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
-
-        // Vent Flap Hinge
-        const ventGroup = new THREE.Group();
-        ventGroup.position.set(0, 4.8, -3.9);
-        const flap = new THREE.Mesh(new THREE.BoxGeometry(4, 1.5, 0.1), new THREE.MeshStandardMaterial({ color: 0x777777 }));
-        flap.position.y = -0.75;
-        ventGroup.add(flap);
-        podGroup.add(ventGroup);
-
-        // Fans
-        const fanNight = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.3, 16), hardwareMat);
-        fanNight.rotation.x = Math.PI / 2;
-        fanNight.position.set(-1.5, 2.5, -3.8);
-        podGroup.add(fanNight);
-
-        const fanDesic = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.3, 16), hardwareMat);
-        fanDesic.rotation.x = Math.PI / 2;
-        fanDesic.position.set(1.5, 2.5, -3.8);
-        podGroup.add(fanDesic);
-
-        // --- Human Scale Mannequins ---
-        function createHuman(colorHex, x, z, rotateY) {
-            const group = new THREE.Group();
-            const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.8 });
-
-            // Body
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.25, 1.3, 16), mat);
-            body.position.y = 0.65 + 0.4; // Lift off ground
-            body.castShadow = true;
-            group.add(body);
-
-            // Head
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), mat);
-            head.position.y = 1.3 + 0.4 + 0.22;
-            head.castShadow = true;
-            group.add(head);
-
-            group.position.set(x, 0, z);
-            group.rotation.y = rotateY;
-            return group;
+        // Scrub bushes
+        function createBush(x, z, s) {
+            const g = new THREE.Group();
+            const m = new THREE.MeshStandardMaterial({ color: 0x5a7a3a, roughness: 0.9 });
+            for (let i = 0; i < 4; i++) {
+                const r = 0.2 + Math.random() * 0.3;
+                const bush = new THREE.Mesh(new THREE.SphereGeometry(r, 6, 6), m);
+                bush.position.set((Math.random() - 0.5) * 0.6, r * 0.5, (Math.random() - 0.5) * 0.6);
+                bush.scale.y = 0.6;
+                g.add(bush);
+            }
+            g.position.set(x, 0, z);
+            g.scale.setScalar(s);
+            return g;
         }
 
-        // Add 4 people inside, 1 walking in
-        podGroup.add(createHuman(0x3498db, -2, -1, Math.PI / 4));
-        podGroup.add(createHuman(0xe74c3c, 2, -1.5, -Math.PI / 6));
-        podGroup.add(createHuman(0x2ecc71, -1, -2.5, Math.PI));
-        podGroup.add(createHuman(0xf1c40f, 1.5, 1, -Math.PI / 2));
+        const bushPositions = [
+            [-7, -6], [8, -7], [-8, 5], [9, 6], [-6, 8], [7, -5],
+            [-9, -4], [-7, 7], [6, -8], [-5, -7], [10, 3], [-10, -2]
+        ];
+        bushPositions.forEach(([x, z]) => scene.add(createBush(x, z, 0.6 + Math.random() * 0.8)));
 
-        // Person walking in the door
-        const enteringPerson = createHuman(0x9b59b6, 0, 5, Math.PI);
+        // Small dry grass tufts
+        const grassMat = new THREE.MeshStandardMaterial({ color: 0x8a7a5a, roughness: 1.0 });
+        for (let i = 0; i < 50; i++) {
+            const blade = new THREE.Mesh(
+                new THREE.ConeGeometry(0.02, 0.08 + Math.random() * 0.1, 3),
+                grassMat
+            );
+            const a = Math.random() * Math.PI * 2;
+            const r = 2 + Math.random() * 6;
+            blade.position.set(Math.cos(a) * r, 0, Math.sin(a) * r);
+            blade.rotation.x = (Math.random() - 0.5) * 0.3;
+            blade.rotation.z = (Math.random() - 0.5) * 0.3;
+            blade.castShadow = true;
+            scene.add(blade);
+        }
+
+        // === LIGHTING ===
+        const hemiLight = new THREE.HemisphereLight(0xffeedd, 0x8899aa, 0.6);
+        scene.add(hemiLight);
+
+        const sunLight = new THREE.DirectionalLight(0xfff0dd, 1.4);
+        sunLight.position.set(15, 25, 10);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 4096;
+        sunLight.shadow.mapSize.height = 4096;
+        sunLight.shadow.camera.near = 0.5;
+        sunLight.shadow.camera.far = 60;
+        sunLight.shadow.camera.left = -20;
+        sunLight.shadow.camera.right = 20;
+        sunLight.shadow.camera.top = 20;
+        sunLight.shadow.camera.bottom = -20;
+        sunLight.shadow.bias = -0.001;
+        scene.add(sunLight);
+
+        const fillLight = new THREE.DirectionalLight(0x8899ff, 0.3);
+        fillLight.position.set(-10, 5, -10);
+        scene.add(fillLight);
+
+        const interiorLight = new THREE.PointLight(0x00e5ff, 0, 8);
+        interiorLight.position.set(0, 2.5, 0);
+        scene.add(interiorLight);
+
+        // === MATERIALS ===
+        const matSkin = new THREE.MeshStandardMaterial({
+            color: 0xf0f4ff,
+            roughness: 0.15,
+            metalness: 0.2
+        });
+
+        const matPcmSolid = new THREE.MeshStandardMaterial({
+            color: 0xdce8ff,
+            roughness: 0.2,
+            metalness: 0.1
+        });
+
+        const matPcmMelting = new THREE.MeshStandardMaterial({
+            color: 0xffdcc0,
+            roughness: 0.2,
+            metalness: 0.1,
+            emissive: 0xff6600,
+            emissiveIntensity: 0.12
+        });
+
+        const matPcmRecharging = new THREE.MeshStandardMaterial({
+            color: 0xaad4ff,
+            roughness: 0.2,
+            metalness: 0.1,
+            emissive: 0x0088ff,
+            emissiveIntensity: 0.18
+        });
+
+        const matXray = new THREE.MeshPhysicalMaterial({
+            color: 0x00aaff,
+            transparent: true,
+            opacity: 0.2,
+            roughness: 0.1,
+            metalness: 0.0,
+            side: THREE.DoubleSide
+        });
+
+        const matFrame = new THREE.MeshStandardMaterial({
+            color: 0x2a2a2e,
+            roughness: 0.7,
+            metalness: 0.4
+        });
+
+        const matDark = new THREE.MeshStandardMaterial({
+            color: 0x111112,
+            roughness: 0.9,
+            metalness: 0.0
+        });
+
+        let currentWallMat = matPcmSolid;
+        const wallMeshes = [];
+        let currentMode = 'XRAY';
+
+        // === SHELTER CONSTRUCTION ===
+        // Real dimensions: 6m wide x 4m deep x 2.6m walls
+        const W = 6;
+        const D = 4;
+        const H = 2.6;
+        const wallThick = 0.25;
+        const roofOverhang = 0.4;
+
+        const podGroup = new THREE.Group();
+
+        // Floor base
+        const slabMat = new THREE.MeshStandardMaterial({ color: 0x3a3a3e, roughness: 0.8, metalness: 0.2 });
+        const slab = new THREE.Mesh(new THREE.BoxGeometry(W + 0.4, 0.25, D + 0.4), slabMat);
+        slab.position.y = 0.125;
+        slab.receiveShadow = true;
+        slab.castShadow = true;
+        podGroup.add(slab);
+
+        // Interior floor
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x4a4a4e, roughness: 0.9 });
+        const interiorFloor = new THREE.Mesh(new THREE.PlaneGeometry(W - 0.4, D - 0.4), floorMat);
+        interiorFloor.rotation.x = -Math.PI / 2;
+        interiorFloor.position.y = 0.26;
+        podGroup.add(interiorFloor);
+
+        // Walls (PCM-integrated)
+        function createPCMWall(w, h, d, x, y, z, rx, ry, rz) {
+            const wall = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), matXray);
+            wall.position.set(x, y, z);
+            wall.rotation.set(rx || 0, ry || 0, rz || 0);
+            wall.castShadow = true;
+            wall.receiveShadow = true;
+            wallMeshes.push(wall);
+            podGroup.add(wall);
+
+            // MgO-PVDF outer skin layer
+            const skin = new THREE.Mesh(
+                new THREE.BoxGeometry(w * 1.01, h * 1.01, 0.03),
+                matSkin
+            );
+            skin.position.set(x + (d / 2 + 0.015) * (d > 0 ? 1 : 0), y, z);
+            podGroup.add(skin);
+
+            return wall;
+        }
+
+        // Back wall
+        createPCMWall(W, H, wallThick, 0, H / 2 + 0.125, -D / 2);
+        // Front wall (left section, right section, top section - door opening in middle)
+        createPCMWall(2.2, H, wallThick, -1.9, H / 2 + 0.125, D / 2);
+        createPCMWall(2.2, H, wallThick, 1.9, H / 2 + 0.125, D / 2);
+        createPCMWall(W, 0.6, wallThick, 0, H - 0.175 + 0.125, D / 2);
+        // Left wall
+        createPCMWall(wallThick, H, D, -W / 2, H / 2 + 0.125, 0);
+        // Right wall
+        createPCMWall(wallThick, H, D, W / 2, H / 2 + 0.125, 0);
+
+        // Roof with overhang
+        const roofMat = new THREE.MeshStandardMaterial({
+            color: 0xccd4e0,
+            roughness: 0.3,
+            metalness: 0.3
+        });
+        const roof = new THREE.Mesh(
+            new THREE.BoxGeometry(W + roofOverhang * 2, 0.12, D + roofOverhang * 2),
+            roofMat
+        );
+        roof.position.set(0, H + 0.125 + 0.06, 0);
+        roof.castShadow = true;
+        podGroup.add(roof);
+        wallMeshes.push(roof);
+
+        // Roof ridge
+        const ridge = new THREE.Mesh(
+            new THREE.BoxGeometry(0.4, 0.2, D + roofOverhang * 2 + 0.2),
+            new THREE.MeshStandardMaterial({ color: 0x3a3a3e, roughness: 0.7, metalness: 0.4 })
+        );
+        ridge.position.set(0, H + 0.125 + 0.12, 0);
+        podGroup.add(ridge);
+
+        // === DOOR & FRAME ===
+        const entranceGroup = new THREE.Group();
+        entranceGroup.position.set(0, 0.125, D / 2 + 0.01);
+        podGroup.add(entranceGroup);
+
+        // Door frame
+        const frameMatDoor = new THREE.MeshStandardMaterial({ color: 0x2a2a2e, roughness: 0.7, metalness: 0.3 });
+        const frameTop = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.1, 0.15), frameMatDoor);
+        frameTop.position.set(0, 2.05, 0);
+        entranceGroup.add(frameTop);
+        const frameL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.2, 0.15), frameMatDoor);
+        frameL.position.set(-0.9, 1.05, 0);
+        entranceGroup.add(frameL);
+        const frameR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.2, 0.15), frameMatDoor);
+        frameR.position.set(0.9, 1.05, 0);
+        entranceGroup.add(frameR);
+
+        // Hinge-based door
+        const doorGroup = new THREE.Group();
+        doorGroup.position.set(-0.8, 0, 0); // Hinge position on left frame
+        entranceGroup.add(doorGroup);
+
+        const doorMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1c, roughness: 0.4, metalness: 0.7 });
+        const doorMesh = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.0, 0.06), doorMat);
+        doorMesh.position.set(0.8, 1.0, 0); // Offset geometry so it swings around the hinge
+        doorMesh.castShadow = true;
+        doorGroup.add(doorMesh);
+
+        // Door handle
+        const handleMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 1, roughness: 0.2 });
+        const handle = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.5, 0.1), handleMat);
+        handle.position.set(0.7, 0, 0.08); // Relative to doorMesh center
+        doorMesh.add(handle);
+
+        // === WINDOWS ===
+        function createWindow(px, py, pz, rotY, w, h) {
+            const g = new THREE.Group();
+            const glassMatWin = new THREE.MeshPhysicalMaterial({
+                color: 0x88ccff,
+                transparent: true,
+                opacity: 0.3,
+                roughness: 0.0,
+                metalness: 0.0
+            });
+            const winMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2e, roughness: 0.7, metalness: 0.3 });
+
+            const frameOuter = new THREE.Mesh(new THREE.BoxGeometry(w + 0.1, h + 0.1, 0.08), winMat);
+            g.add(frameOuter);
+
+            const glass = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.03), glassMatWin);
+            glass.position.z = 0.02;
+            g.add(glass);
+
+            // Cross bars
+            const barMat = new THREE.MeshStandardMaterial({ color: 0x3a3a3e, metalness: 0.5, roughness: 0.5 });
+            const hBar = new THREE.Mesh(new THREE.BoxGeometry(w, 0.02, 0.04), barMat);
+            hBar.position.z = 0.02;
+            g.add(hBar);
+            const vBar = new THREE.Mesh(new THREE.BoxGeometry(0.02, h, 0.04), barMat);
+            vBar.position.z = 0.02;
+            g.add(vBar);
+
+            g.position.set(px, py, pz);
+            g.rotation.y = rotY;
+            return g;
+        }
+
+        podGroup.add(createWindow(-W / 2 + 0.15, 1.8, -0.8, 0, 0.7, 0.7));
+        podGroup.add(createWindow(-W / 2 + 0.15, 1.8, 0.8, 0, 0.7, 0.7));
+        podGroup.add(createWindow(W / 2 - 0.15, 1.8, -0.8, Math.PI, 0.7, 0.7));
+        podGroup.add(createWindow(W / 2 - 0.15, 1.8, 0.8, Math.PI, 0.7, 0.7));
+
+        // === DHT22 SENSORS ===
+        function createDHT22(x, y, z, rotY) {
+            const g = new THREE.Group();
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.6 });
+            const faceMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3 });
+
+            const body = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.10, 0.03), bodyMat);
+            g.add(body);
+
+            const face = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.07, 0.008), faceMat);
+            face.position.z = 0.019;
+            g.add(face);
+
+            const dotMat = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
+            const dot = new THREE.Mesh(new THREE.SphereGeometry(0.006, 8, 8), dotMat);
+            dot.position.z = 0.028;
+            g.add(dot);
+
+            // Pins
+            const pinMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.8 });
+            for (let i = 0; i < 4; i++) {
+                const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.025, 4), pinMat);
+                pin.position.set(-0.022 + i * 0.014, -0.06, 0);
+                pin.rotation.x = Math.PI / 2;
+                g.add(pin);
+            }
+
+            g.position.set(x, y, z);
+            g.rotation.y = rotY;
+            return g;
+        }
+
+        podGroup.add(createDHT22(-2.7, 1.4, -1.8, 0));
+        podGroup.add(createDHT22(2.7, 1.4, 1.5, Math.PI));
+        podGroup.add(createDHT22(0.5, 1.8, 1.9, -Math.PI / 3));
+        podGroup.add(createDHT22(-0.5, 1.8, 1.9, Math.PI / 3));
+        // External sensor
+        podGroup.add(createDHT22(3.2, 1.2, -D / 2 - 0.3, -Math.PI / 4));
+
+
+
+        // === HARDWARE CORE ===
+        const hwGroup = new THREE.Group();
+        hwGroup.position.set(0, 1.6, -D / 2 + 0.15);
+
+        // Main enclosure
+        const encMat = new THREE.MeshStandardMaterial({ color: 0x18181a, roughness: 0.7, metalness: 0.3 });
+        const enclosure = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.9, 0.6), encMat);
+        enclosure.position.y = 0.45;
+        enclosure.castShadow = true;
+        hwGroup.add(enclosure);
+
+        // Top panel (cover)
+        const topPanel = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.05, 0.6), matXray);
+        topPanel.position.y = 0.9;
+        wallMeshes.push(topPanel);
+        hwGroup.add(topPanel);
+
+        // Front panel
+        const frontPanel = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.9, 0.05), matXray);
+        frontPanel.position.set(0, 0.45, 0.33);
+        wallMeshes.push(frontPanel);
+        hwGroup.add(frontPanel);
+
+        // === 2 x 30W INTAKE FANS (Night Flush) ===
+        const intakeFans = [];
+        function createIntakeFan(px, py, pz) {
+            const g = new THREE.Group();
+            const r = 0.3;
+            const fanMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2e, roughness: 0.4, metalness: 0.6 });
+
+            const casing = new THREE.Mesh(new THREE.TorusGeometry(r, 0.035, 8, 20), fanMat);
+            casing.position.z = 0;
+            g.add(casing);
+
+            const blades = new THREE.Group();
+            for (let i = 0; i < 6; i++) {
+                const blade = new THREE.Mesh(
+                    new THREE.BoxGeometry(r * 0.8, 0.015, 0.07),
+                    new THREE.MeshStandardMaterial({ color: 0x3a3a3e, metalness: 0.7, roughness: 0.3 })
+                );
+                const angle = (Math.PI * 2 / 6) * i;
+                blade.position.x = (r * 0.4) * Math.cos(angle);
+                blade.position.y = (r * 0.4) * Math.sin(angle);
+                blade.rotation.z = angle;
+                blade.rotation.x = Math.PI / 3;
+                blades.add(blade);
+            }
+            g.add(blades);
+
+            // Grille
+            const grilleMat = new THREE.MeshBasicMaterial({ color: 0x0a0a0a, wireframe: true });
+            const grille = new THREE.Mesh(new THREE.CircleGeometry(r + 0.03, 12), grilleMat);
+            grille.position.z = 0.06;
+            g.add(grille);
+
+            // Air intake duct tube (rear)
+            const tubeMat = new THREE.MeshStandardMaterial({ color: 0x222224, roughness: 0.8 });
+            const tube = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.7, r * 0.7, 0.2, 12), tubeMat);
+            tube.rotation.x = Math.PI / 2;
+            tube.position.z = -0.1;
+            g.add(tube);
+
+            g.position.set(px, py, pz);
+            return { group: g, blades };
+        }
+
+        // Two 30W intake fans side by side
+        const fan1 = createIntakeFan(-0.65, 0.45, 0.35);
+        hwGroup.add(fan1.group);
+        intakeFans.push(fan1);
+
+        const fan2 = createIntakeFan(0.65, 0.45, 0.35);
+        hwGroup.add(fan2.group);
+        intakeFans.push(fan2);
+
+        // === 20W DESICCANT FAN ===
+        const desicFanGrp = new THREE.Group();
+        const dr = 0.22;
+        const dFanMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2e, roughness: 0.4, metalness: 0.6 });
+        const dCasing = new THREE.Mesh(new THREE.TorusGeometry(dr, 0.025, 8, 16), dFanMat);
+        desicFanGrp.add(dCasing);
+
+        const dBlades = new THREE.Group();
+        for (let i = 0; i < 5; i++) {
+            const blade = new THREE.Mesh(
+                new THREE.BoxGeometry(dr * 0.75, 0.012, 0.05),
+                new THREE.MeshStandardMaterial({ color: 0x3a3a3e, metalness: 0.7, roughness: 0.3 })
+            );
+            const angle = (Math.PI * 2 / 5) * i;
+            blade.position.x = (dr * 0.38) * Math.cos(angle);
+            blade.position.y = (dr * 0.38) * Math.sin(angle);
+            blade.rotation.z = angle;
+            blade.rotation.x = Math.PI / 3;
+            dBlades.add(blade);
+        }
+        desicFanGrp.add(dBlades);
+
+        const dGrille = new THREE.Mesh(
+            new THREE.CircleGeometry(dr + 0.02, 10),
+            new THREE.MeshBasicMaterial({ color: 0x0a0a0a, wireframe: true })
+        );
+        dGrille.position.z = 0.05;
+        desicFanGrp.add(dGrille);
+
+        desicFanGrp.position.set(0, 0.45, 0.35);
+        hwGroup.add(desicFanGrp);
+
+        // Label sprites
+        function makeLabelSprite(text, accentColor) {
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = 350;
+                canvas.height = 80;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return null;
+                
+                ctx.clearRect(0, 0, 350, 80);
+                
+                // Text shadow for high contrast
+                ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+                ctx.shadowBlur = 6;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 1;
+                
+                // Text rendering
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '500 24px -apple-system, BlinkMacSystemFont, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(text, 175, 40);
+                
+                // Subtle colored underline (Claude minimalist style)
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#' + accentColor.toString(16).padStart(6, '0');
+                ctx.fillRect(160, 60, 30, 3);
+                
+                const texture = new THREE.CanvasTexture(canvas);
+                texture.needsUpdate = true;
+                const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false, depthWrite: false });
+                const sprite = new THREE.Sprite(mat);
+                sprite.scale.set(1.5, 0.34, 1);
+                return sprite;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function addLabel(t, x, y, z, c, sx, sy) {
+            try {
+                const s = makeLabelSprite(t, c);
+                if (!s) return;
+                s.position.set(x, y, z);
+                // Ignore custom scaling to enforce consistent aesthetic
+                return s;
+            } catch (e) { }
+        }
+
+        function addLabelTo(group, t, x, y, z, c, sx, sy) {
+            const s = addLabel(t, x, y, z, c, sx, sy);
+            if (s) group.add(s);
+        }
+
+        addLabelTo(hwGroup, 'Intake Fans (x2)', -0.65, 0.35, 0.38, 0x00aaff);
+        addLabelTo(hwGroup, 'Desiccant Fan', 0, -0.05, 0.38, 0xff5577);
+        addLabelTo(hwGroup, 'ESP32 Control Unit', -1.8, 0.45, 0.38, 0x2ecc71);
+        addLabelTo(hwGroup, 'Desiccant Scrubber', 1.8, 0.45, 0.38, 0xffaa00);
+        addLabelTo(hwGroup, 'Servo Actuator', 0, -0.65, 0.38, 0x999999);
+
+        addLabelTo(podGroup, 'DHT22 Sensor', 3.2, 0.7, -D / 2 - 0.3, 0x555577, 0.8, 0.2);
+
+        // === SERVO VENT ===
+        const ventGroup = new THREE.Group();
+        ventGroup.position.set(0, 0.22, 0.37);
+
+        const ventFlapMat = new THREE.MeshStandardMaterial({ color: 0x3a3a3e, roughness: 0.5, metalness: 0.5 });
+        const ventFlap = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.3, 0.03), ventFlapMat);
+        ventFlap.position.y = -0.15;
+        ventFlap.castShadow = true;
+        ventGroup.add(ventFlap);
+
+        // Vent frame
+        const ventFrameMat = new THREE.MeshStandardMaterial({ color: 0x222224, roughness: 0.7 });
+        const vf = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.05, 0.06), ventFrameMat);
+        vf.position.y = 0;
+        ventGroup.add(vf);
+        const vf2 = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.05, 0.06), ventFrameMat);
+        vf2.position.y = -0.3;
+        ventGroup.add(vf2);
+
+        // Servo motor housing
+        const servoMat = new THREE.MeshStandardMaterial({ color: 0x444446, roughness: 0.5, metalness: 0.6 });
+        const servoBody = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.12, 0.1), servoMat);
+        servoBody.position.set(1.5, -0.15, 0);
+        ventGroup.add(servoBody);
+
+        wallMeshes.push(ventFlap);
+        hwGroup.add(ventGroup);
+
+        // === ESP32 BOARD ===
+        const espGroup = new THREE.Group();
+        espGroup.position.set(-1.8, 0.5, 0.35);
+
+        const pcbMat = new THREE.MeshStandardMaterial({ color: 0x1a6b3c, roughness: 0.6, metalness: 0.2 });
+        const pcb = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.55, 0.04), pcbMat);
+        espGroup.add(pcb);
+
+        // ESP32 chip
+        const chipMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.3, metalness: 0.8 });
+        const chip = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.02), chipMat);
+        chip.position.set(0, 0.05, 0.025);
+        espGroup.add(chip);
+
+        // GPIO pins
+        const gpioMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.8 });
+        for (let i = 0; i < 8; i++) {
+            const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.02, 4), gpioMat);
+            pin.position.set(-0.16 + i * 0.045, -0.26, 0);
+            pin.rotation.x = Math.PI / 2;
+            espGroup.add(pin);
+        }
+
+        // USB port
+        const usbMat = new THREE.MeshStandardMaterial({ color: 0x555555, metalness: 0.5 });
+        const usb = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.03, 0.02), usbMat);
+        usb.position.set(0, 0.28, 0.025);
+        espGroup.add(usb);
+
+        // LED
+        const ledMat = new THREE.MeshBasicMaterial({ color: 0x2ecc71 });
+        const led = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), ledMat);
+        led.position.set(0.15, 0.2, 0.025);
+        espGroup.add(led);
+
+        hwGroup.add(espGroup);
+
+        // === DESICCANT CONTAINER ===
+        const desicGroup = new THREE.Group();
+        desicGroup.position.set(1.8, 0.45, 0.35);
+
+        const canMat = new THREE.MeshStandardMaterial({
+            color: 0xcc6633,
+            roughness: 0.7,
+            metalness: 0.1
+        });
+        const canister = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.3, 12), canMat);
+        canister.position.y = 0.15;
+        canister.castShadow = true;
+        desicGroup.add(canister);
+
+        const capMat = new THREE.MeshStandardMaterial({ color: 0x444444, roughness: 0.5, metalness: 0.4 });
+        const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.04, 12), capMat);
+        cap.position.y = 0.32;
+        desicGroup.add(cap);
+
+        // Desiccant hose
+        const hoseMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.9 });
+        const hoseCurve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(0.15, 0.3, 0),
+            new THREE.Vector3(0.3, 0.5, 0.1),
+            new THREE.Vector3(0, 0.7, 0.2),
+            new THREE.Vector3(-1.5, 0.5, 0.3)
+        ]);
+        const hose = new THREE.Mesh(new THREE.TubeGeometry(hoseCurve, 10, 0.015, 6, false), hoseMat);
+        desicGroup.add(hose);
+
+        hwGroup.add(desicGroup);
+
+        podGroup.add(hwGroup);
+
+        // === 160Ah LiFePO4 BATTERY ===
+        const batteryGroup = new THREE.Group();
+        batteryGroup.position.set(3.2, 0.125, 1.2);
+
+        const battOuterMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2e, roughness: 0.6, metalness: 0.8 });
+        const batteryBox = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.5, 0.6), battOuterMat);
+        batteryBox.position.y = 0.25;
+        batteryBox.castShadow = true;
+        batteryGroup.add(batteryBox);
+
+        // Terminal posts
+        const termMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 1, roughness: 0.2 });
+        const termPos = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.06, 8), termMat);
+        termPos.position.set(0.3, 0.53, 0);
+        batteryGroup.add(termPos);
+        const termNeg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.06, 8), termMat);
+        termNeg.position.set(-0.3, 0.53, 0);
+        batteryGroup.add(termNeg);
+
+        // Label
+        const labelMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.5 });
+        const labelPlate = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.1, 0.02), labelMat);
+        labelPlate.position.set(0, 0.25, 0.31);
+        batteryGroup.add(labelPlate);
+
+        podGroup.add(batteryGroup);
+
+        // === MPPT CHARGE CONTROLLER ===
+        const mpptGroup = new THREE.Group();
+        mpptGroup.position.set(2.7, 0.125, 0.5);
+
+        const mpptMat = new THREE.MeshStandardMaterial({ color: 0x222244, roughness: 0.5, metalness: 0.6 });
+        const mpptBox = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.2, 0.15), mpptMat);
+        mpptBox.position.y = 0.1;
+        mpptGroup.add(mpptBox);
+
+        // MPPT screen
+        const screenMat = new THREE.MeshBasicMaterial({ color: 0x003300 });
+        const screen = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.08, 0.02), screenMat);
+        screen.position.set(0, 0.1, 0.085);
+        mpptGroup.add(screen);
+
+        // MPPT LEDs
+        const mLedMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const mLed = new THREE.Mesh(new THREE.SphereGeometry(0.01, 6, 6), mLedMat);
+        mLed.position.set(0.1, 0.13, 0.085);
+        mpptGroup.add(mLed);
+
+        podGroup.add(mpptGroup);
+
+        addLabelTo(batteryGroup, '160Ah LiFePO4 Battery', 0, 0.65, 0, 0x222266, 1.4, 0.3);
+        addLabelTo(mpptGroup, 'MPPT Charge Controller', 0, 0.35, 0, 0x224422, 1.6, 0.3);
+
+        // === WIRING ===
+        function createWire(points, color) {
+            const curve = new THREE.CatmullRomCurve3(points);
+            const wMat = new THREE.MeshStandardMaterial({
+                color: color || 0x111111,
+                roughness: 0.9
+            });
+            const mesh = new THREE.Mesh(new THREE.TubeGeometry(curve, 16, 0.012, 4, false), wMat);
+            return mesh;
+        }
+
+        // Solar panel to MPPT
+        podGroup.add(createWire([
+            new THREE.Vector3(3.2, 0.2, 0.5),
+            new THREE.Vector3(3.0, 0.2, 0.6),
+            new THREE.Vector3(2.85, 0.2, 0.5)
+        ], 0x884422));
+
+        // MPPT to Battery
+        podGroup.add(createWire([
+            new THREE.Vector3(2.85, 0.2, 0.55),
+            new THREE.Vector3(3.0, 0.2, 0.8),
+            new THREE.Vector3(3.2, 0.2, 1.2)
+        ], 0xcc2222));
+
+        // Battery to shelter
+        podGroup.add(createWire([
+            new THREE.Vector3(3.2, 0.2, 1.5),
+            new THREE.Vector3(3.0, 0.2, 1.8),
+            new THREE.Vector3(2.8, 0.2, 1.9),
+            new THREE.Vector3(0, 0.2, 1.9)
+        ], 0x222222));
+
+        // === SOLAR PANEL (220W mono) ===
+        const solarGroup = new THREE.Group();
+        solarGroup.position.set(0, H + 0.125 + 0.22, 0); // Placed on the roof ridge
+
+        // Mount structure
+        const mountMatSp = new THREE.MeshStandardMaterial({ color: 0x2a2a2e, roughness: 0.7, metalness: 0.5 });
+        const post1 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.4, 6), mountMatSp);
+        post1.position.set(-0.8, 0.2, 0.3);
+        post1.castShadow = true;
+        solarGroup.add(post1);
+        const post2 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.4, 6), mountMatSp);
+        post2.position.set(0.8, 0.2, 0.3);
+        post2.castShadow = true;
+        solarGroup.add(post2);
+        const post3 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.1, 6), mountMatSp);
+        post3.position.set(-0.8, 0.05, -0.3);
+        post3.castShadow = true;
+        solarGroup.add(post3);
+        const post4 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.1, 6), mountMatSp);
+        post4.position.set(0.8, 0.05, -0.3);
+        post4.castShadow = true;
+        solarGroup.add(post4);
+
+        // Frame
+        const tiltGroup = new THREE.Group();
+        tiltGroup.position.set(0, 0.4, 0.3);
+        tiltGroup.rotation.x = -0.35;
+
+        const panelW = 1.8;
+        const panelH = 1.0;
+        const pFrameMat = new THREE.MeshStandardMaterial({ color: 0x3a3a3e, roughness: 0.6, metalness: 0.7 });
+        const pFrame = new THREE.Mesh(new THREE.BoxGeometry(panelW + 0.08, panelH + 0.08, 0.04), pFrameMat);
+        pFrame.castShadow = true;
+        tiltGroup.add(pFrame);
+
+        // Panel surface
+        const panelSurfMat = new THREE.MeshStandardMaterial({
+            color: 0x0a1628,
+            roughness: 0.3,
+            metalness: 0.5
+        });
+        const panelSurf = new THREE.Mesh(new THREE.BoxGeometry(panelW, panelH, 0.02), panelSurfMat);
+        panelSurf.position.z = -0.01;
+        tiltGroup.add(panelSurf);
+
+        // Solar cells
+        const cellMatSp = new THREE.MeshStandardMaterial({ color: 0x0d2137, roughness: 0.4, metalness: 0.4 });
+        const cols = 6, rows = 4;
+        const cw = panelW / cols, ch = panelH / rows;
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const cell = new THREE.Mesh(
+                    new THREE.PlaneGeometry(cw * 0.9, ch * 0.9),
+                    cellMatSp
+                );
+                cell.position.set(-panelW / 2 + cw / 2 + c * cw, -panelH / 2 + ch / 2 + r * ch, 0.012);
+                tiltGroup.add(cell);
+            }
+        }
+
+        // Glass
+        const glassMatSp = new THREE.MeshPhysicalMaterial({
+            color: 0x1a3a5c,
+            roughness: 0.02,
+            metalness: 0.0,
+            transparent: true,
+            opacity: 0.25,
+            side: THREE.DoubleSide
+        });
+        const glassSp = new THREE.Mesh(new THREE.PlaneGeometry(panelW, panelH), glassMatSp);
+        glassSp.position.z = 0.015;
+        tiltGroup.add(glassSp);
+
+        // Glow
+        const glowMatSp = new THREE.MeshBasicMaterial({
+            color: 0x0088ff,
+            transparent: true,
+            opacity: 0.05,
+            side: THREE.DoubleSide
+        });
+        const glow = new THREE.Mesh(new THREE.PlaneGeometry(panelW * 0.85, panelH * 0.85), glowMatSp);
+        glow.position.z = 0.02;
+        tiltGroup.add(glow);
+
+        solarGroup.add(tiltGroup);
+
+        // Solar cable
+        const solarCable = createWire([
+            new THREE.Vector3(0, 0.1, 0.5),
+            new THREE.Vector3(1.0, -0.1, 1.0),
+            new THREE.Vector3(2.7, -2.5, 0.8),
+            new THREE.Vector3(2.7, -2.8, 0.5)
+        ], 0x884422);
+        solarGroup.add(solarCable);
+
+        const solarLabel = addLabel('220W Mono Solar Panel', 0, -0.6, 0.5, 0x226688, 1.4, 0.25);
+        if (solarLabel) tiltGroup.add(solarLabel);
+
+        scene.add(solarGroup);
+
+        // === 10 HUMAN FIGURES ===
+        function createHuman(x, z, rotY, scale) {
+            const g = new THREE.Group();
+            const skinMat = new THREE.MeshStandardMaterial({ color: 0xccbbaa, roughness: 0.7, metalness: 0.0 });
+            const clothMat = new THREE.MeshStandardMaterial({ color: 0x444466, roughness: 0.8, metalness: 0.0 });
+
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 0.6, 8), clothMat);
+            body.position.y = 0.5;
+            body.castShadow = true;
+            g.add(body);
+
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 8), skinMat);
+            head.position.y = 0.95;
+            head.castShadow = true;
+            g.add(head);
+
+            // Arms
+            const armMat = clothMat;
+            for (let side = -1; side <= 1; side += 2) {
+                const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.4, 6), armMat);
+                arm.position.set(side * 0.22, 0.65, 0);
+                arm.rotation.z = side * 0.2;
+                g.add(arm);
+            }
+
+            g.position.set(x, 0.125, z);
+            g.rotation.y = rotY || 0;
+            g.scale.setScalar(scale || 1);
+            return g;
+        }
+
+        // Sitting positions (on floor)
+        const peoplePositions = [
+            [-1.5, -1.0, 0.2], [1.5, -1.0, -0.3], [-0.5, -1.3, 0.8], [2.0, -0.8, -0.8],
+            [-1.8, -0.5, 1.2], [0.5, -1.5, 0.0], [2.2, 0.0, 1.0], [-1.0, 0.5, -0.5],
+            [1.0, 0.5, 0.5], [-2.0, 0.8, -1.0]
+        ];
+
+        const people = [];
+        peoplePositions.forEach(([x, z, rot]) => {
+            const p = createHuman(x, z, rot, 0.85 + Math.random() * 0.15);
+            podGroup.add(p);
+            people.push(p);
+        });
+
+        // One person entering
+        const enteringPerson = createHuman(0, 3.5, 0, 0.9);
         podGroup.add(enteringPerson);
 
         scene.add(podGroup);
 
-        // --- Animation Variables ---
+        // === ANIMATION STATE ===
         let targetVentAngle = 0;
         let nightFanSpeed = 0;
         let desicFanSpeed = 0;
         let targetDoorAngle = 0;
+        let currentState = 'IDLE';
 
-        // Camera Tweening targets
-        let targetCamPos = new THREE.Vector3(12, 8, 18);
-        let targetCamLook = new THREE.Vector3(0, 2, 0);
-        let currentCamLook = new THREE.Vector3(0, 2, 0);
+        let targetCamPos = new THREE.Vector3(10, 7, 12);
+        let targetCamLook = new THREE.Vector3(0, 1.5, 0);
+        let currentCamLook = new THREE.Vector3(0, 1.5, 0);
+        let isAutoMovingCamera = true;
 
-        // Initialize Camera
         camera.position.copy(targetCamPos);
         controls.target.copy(currentCamLook);
+        
+        controls.addEventListener('start', () => { isAutoMovingCamera = false; });
 
-        // --- Logic Functions ---
+        // === PCM WALL UPDATE ===
+        function updatePCMWalls(state) {
+            let mat;
+            switch (state) {
+                case 'NIGHT_FLUSH': mat = matPcmRecharging; break;
+                case 'DESICCANT': mat = matPcmMelting; break;
+                default: mat = matPcmSolid;
+            }
+            currentWallMat = mat;
+            if (currentMode === 'REAL') {
+                wallMeshes.forEach(m => {
+                    if (m.material !== matFrame && m.material !== matDark) {
+                        m.material = mat;
+                    }
+                });
+            }
+        }
+
+        // === UI FUNCTIONS ===
         window.setState = function (state) {
             document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
             const statusBox = document.getElementById('status-box');
+            currentState = state;
 
             if (state === 'IDLE') {
                 document.getElementById('btn-idle').classList.add('active');
@@ -349,82 +1139,188 @@
                 nightFanSpeed = 0;
                 desicFanSpeed = 0;
                 interiorLight.intensity = 0;
-                statusBox.innerText = "System Idle. ESP32 standing by. Solid state PCM is passively absorbing outside thermal load.";
-                statusBox.style.borderLeftColor = "#888";
-            }
-            else if (state === 'NIGHT_FLUSH') {
+                ledMat.color.setHex(0x2ecc71);
+                particleMat.opacity = 0;
+                particleActive = false;
+                statusBox.innerHTML = '<strong>Status: Idle</strong><br>PCM in solid state, passively absorbing ambient thermal load. Internal temp stabilized at 28°C. All fans off, vent closed.';
+                statusBox.style.borderLeftColor = '#555';
+                updatePCMWalls('IDLE');
+            } else if (state === 'NIGHT_FLUSH') {
                 document.getElementById('btn-night').classList.add('active');
-                targetVentAngle = -Math.PI / 2; // Open 90 degrees
+                targetVentAngle = -Math.PI / 2.5;
                 nightFanSpeed = 0.4;
                 desicFanSpeed = 0;
-                interiorLight.intensity = 1.5; // Turn on lights inside
-                statusBox.innerText = "Night Flush Active! Servo opened to 90°. Intake fan blasting outside air to refreeze PCM walls.";
-                statusBox.style.borderLeftColor = "#3498db";
-            }
-            else if (state === 'DESICCANT') {
+                interiorLight.color.setHex(0x00e5ff);
+                interiorLight.intensity = 2.5;
+                ledMat.color.setHex(0x00e5ff);
+                particleMat.opacity = 0.7;
+                statusBox.innerHTML = '<strong>Status: Night Flush — Sensible Cooling</strong><br>Outside air cooled below internal temp. 2× 30W intake fans engaged. Vent opened 90°. Cool air re-freezing PCM in wall cavities.';
+                statusBox.style.borderLeftColor = '#00e5ff';
+                updatePCMWalls('NIGHT_FLUSH');
+            } else if (state === 'DESICCANT') {
                 document.getElementById('btn-desic').classList.add('active');
-                targetVentAngle = -Math.PI / 4; // Open 45 degrees
+                targetVentAngle = -Math.PI / 6;
                 nightFanSpeed = 0;
-                desicFanSpeed = 0.2;
-                interiorLight.intensity = 0;
-                statusBox.innerText = "Desiccant Active. Humidity threshold breached. Dehumidifier fan scrubbing air to lower Heat Index.";
-                statusBox.style.borderLeftColor = "#e74c3c";
+                desicFanSpeed = 0.3;
+                interiorLight.color.setHex(0xff3366);
+                interiorLight.intensity = 2.0;
+                ledMat.color.setHex(0xff3366);
+                particleMat.opacity = 0.5;
+                statusBox.innerHTML = '<strong>Status: Latent Cooling — Desiccant Loop</strong><br>Monsoon humidity > 55% RH detected. 20W desiccant fan active. Air routed through desiccant scrubber, then PCM re-cooled to 28°C. Heat Index kept below 35°C danger threshold.';
+                statusBox.style.borderLeftColor = '#ff3366';
+                updatePCMWalls('DESICCANT');
             }
         };
 
         window.setCamera = function (view) {
             document.getElementById('btn-view-out').classList.remove('active');
             document.getElementById('btn-view-in').classList.remove('active');
+            isAutoMovingCamera = true;
 
             if (view === 'OUTSIDE') {
                 document.getElementById('btn-view-out').classList.add('active');
-                targetCamPos.set(12, 8, 18);
-                targetCamLook.set(0, 2, 0);
-                targetDoorAngle = 0; // Close door
+                targetCamPos.set(10, 7, 12);
+                targetCamLook.set(0, 1.5, 0);
+                targetDoorAngle = 0;
             } else {
                 document.getElementById('btn-view-in').classList.add('active');
-                targetCamPos.set(0, 3, 2); // Move camera inside
-                targetCamLook.set(0, 2.5, -4); // Look at the hardware panel
-                targetDoorAngle = -Math.PI / 1.5; // Swing door open wide
+                targetCamPos.set(0, 1.6, 2.0);
+                targetCamLook.set(0, 1.5, -0.5);
+                targetDoorAngle = -Math.PI / 1.5;
             }
         };
 
         window.setMaterial = function (matType) {
             document.getElementById('btn-mat-real').classList.remove('active');
             document.getElementById('btn-mat-xray').classList.remove('active');
+            currentMode = matType;
 
             if (matType === 'REAL') {
                 document.getElementById('btn-mat-real').classList.add('active');
-                wallMeshes.forEach(mesh => mesh.material = matReal);
+                wallMeshes.forEach(m => {
+                    if (m.material === matXray || m.material === matPcmSolid ||
+                        m.material === matPcmMelting || m.material === matPcmRecharging) {
+                        m.material = currentWallMat;
+                    }
+                });
             } else {
                 document.getElementById('btn-mat-xray').classList.add('active');
-                wallMeshes.forEach(mesh => mesh.material = matXray);
+                wallMeshes.forEach(m => {
+                    if (m.material !== matFrame && m.material !== matDark) {
+                        m.material = matXray;
+                    }
+                });
             }
         };
 
-        // --- Render Loop ---
+        // === AIRFLOW PARTICLES ===
+        const particleCount = 300;
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleVelocities = [];
+        const particleLifetimes = new Float32Array(particleCount);
+        const particleColorsArr = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount; i++) {
+            particlePositions[i * 3] = 0;
+            particlePositions[i * 3 + 1] = 0;
+            particlePositions[i * 3 + 2] = 0;
+            particleVelocities.push({ x: 0, y: 0, z: 0 });
+            particleLifetimes[i] = 0;
+            particleColorsArr[i * 3] = 0.1;
+            particleColorsArr[i * 3 + 1] = 0.85;
+            particleColorsArr[i * 3 + 2] = 1.0;
+        }
+
+        const pGeo = new THREE.BufferGeometry();
+        pGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        pGeo.setAttribute('color', new THREE.BufferAttribute(particleColorsArr, 3));
+
+        const particleMat = new THREE.PointsMaterial({
+            size: 0.04,
+            transparent: true,
+            opacity: 0,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const particles = new THREE.Points(pGeo, particleMat);
+        scene.add(particles);
+
+        let particleActive = false;
+
+        function emitParticles(count, spread, speed) {
+            const pos = particles.geometry.attributes.position.array;
+            const cols = particles.geometry.attributes.color.array;
+            for (let i = 0; i < Math.min(count, particleCount); i++) {
+                const idx = Math.floor(Math.random() * particleCount);
+                pos[idx * 3] = (Math.random() - 0.5) * spread;
+                pos[idx * 3 + 1] = (Math.random() - 0.5) * spread;
+                pos[idx * 3 + 2] = 0.1 + Math.random() * 0.2;
+                particleVelocities[idx].x = (Math.random() - 0.5) * speed * 0.3;
+                particleVelocities[idx].y = (Math.random() - 0.5) * speed * 0.3;
+                particleVelocities[idx].z = speed * (0.5 + Math.random() * 0.8);
+                particleLifetimes[idx] = 0.8 + Math.random() * 0.6;
+                cols[idx * 3] = 0.1 + Math.random() * 0.2;
+                cols[idx * 3 + 1] = 0.7 + Math.random() * 0.3;
+                cols[idx * 3 + 2] = 1.0;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+            particles.geometry.attributes.color.needsUpdate = true;
+        }
+
+        // === RENDER LOOP ===
         function animate() {
             requestAnimationFrame(animate);
 
-            // Hardware Animations
-            ventGroup.rotation.x += (targetVentAngle - ventGroup.rotation.x) * 0.05;
-            doorGroup.rotation.y += (targetDoorAngle - doorGroup.rotation.y) * 0.05;
-            fanNight.rotation.y += nightFanSpeed;
-            fanDesic.rotation.y += desicFanSpeed;
+            ventGroup.rotation.x += (targetVentAngle - ventGroup.rotation.x) * 0.08;
+            doorGroup.rotation.y += (targetDoorAngle - doorGroup.rotation.y) * 0.08;
 
-            // Smooth Camera Tweening
-            camera.position.lerp(targetCamPos, 0.03);
-            currentCamLook.lerp(targetCamLook, 0.03);
-            controls.target.copy(currentCamLook);
+            intakeFans.forEach(f => f.blades.rotation.z -= nightFanSpeed);
+            dBlades.rotation.z -= desicFanSpeed * 1.2;
 
-            // Subtle person animation (walking in)
-            if (targetDoorAngle < -0.5) {
-                // If door is open, move the person inside
-                enteringPerson.position.z += (-2 - enteringPerson.position.z) * 0.02;
+            if (isAutoMovingCamera) {
+                camera.position.lerp(targetCamPos, 0.04);
+                currentCamLook.lerp(targetCamLook, 0.04);
+                controls.target.copy(currentCamLook);
             } else {
-                // Move back outside
-                enteringPerson.position.z += (5 - enteringPerson.position.z) * 0.02;
+                currentCamLook.copy(controls.target);
             }
+
+            if (currentState === 'IDLE') {
+                enteringPerson.position.z += (3.5 - enteringPerson.position.z) * 0.03;
+            } else {
+                enteringPerson.position.z += (-1.0 - enteringPerson.position.z) * 0.03;
+            }
+
+            if (Math.random() > 0.97) {
+                led.material.opacity = 0.4;
+            } else {
+                led.material.opacity = 1.0;
+            }
+
+            // Particles
+            if (particleActive) {
+                emitParticles(2, 0.2, 0.7);
+                const pos = particles.geometry.attributes.position.array;
+                for (let i = 0; i < particleCount; i++) {
+                    if (particleLifetimes[i] > 0) {
+                        pos[i * 3] += particleVelocities[i].x * 0.02;
+                        pos[i * 3 + 1] += particleVelocities[i].y * 0.02;
+                        pos[i * 3 + 2] += particleVelocities[i].z * 0.02;
+                        particleLifetimes[i] -= 0.015;
+                        if (particleLifetimes[i] <= 0) {
+                            pos[i * 3] = 0;
+                            pos[i * 3 + 1] = 0;
+                            pos[i * 3 + 2] = 0;
+                        }
+                    }
+                }
+                particles.geometry.attributes.position.needsUpdate = true;
+            }
+
+            // Solar panel glow
+            glowMatSp.opacity = 0.04 + 0.03 * Math.sin(Date.now() * 0.001);
 
             controls.update();
             renderer.render(scene, camera);
