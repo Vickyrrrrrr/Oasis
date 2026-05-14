@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OASIS Shelter - Interactive Showcase</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #0a0a0c;
+            color: white;
+        }
+
+        canvas {
+            display: block;
+            outline: none;
+        }
+
+        #ui-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(15, 15, 18, 0.85);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            max-width: 350px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            margin: 0 0 5px 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .subtitle {
+            color: #4CAF50;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: block;
+            font-weight: bold;
+        }
+
+        p {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .control-btn {
+            flex: 1;
+            padding: 10px;
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .control-btn:hover {
+            background: #333;
+        }
+
+        .control-btn.active {
+            background: #4CAF50;
+            border-color: #4CAF50;
+            color: #000;
+        }
+
+        .state-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #1a1a24;
+            color: #ddd;
+            border: 1px solid #333;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .state-btn.active {
+            border-left: 4px solid #4CAF50;
+            background: #152218;
+            color: white;
+        }
+
+        .hardware-status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            background: #111;
+            font-size: 12px;
+            color: #ccc;
+            line-height: 1.4;
+            border-left: 3px solid #888;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+
+<body>
+
+    <div id="ui-container">
+        <h1>OASIS POD</h1>
+        <span class="subtitle">Human Scale Showcase</span>
+        <p>Demonstrating 10-person capacity, structural MgO-PVDF coating, and active thermal logic.</p>
+
+        <div class="btn-group">
+            <button class="control-btn active" id="btn-view-out" onclick="setCamera('OUTSIDE')">Exterior View</button>
+            <button class="control-btn" id="btn-view-in" onclick="setCamera('INSIDE')">Enter Shelter</button>
+        </div>
+
+        <div class="btn-group" style="margin-bottom: 20px;">
+            <button class="control-btn" id="btn-mat-real" onclick="setMaterial('REAL')">Realistic Walls</button>
+            <button class="control-btn active" id="btn-mat-xray" onclick="setMaterial('XRAY')">X-Ray (Hardware)</button>
+        </div>
+
+        <button class="state-btn active" id="btn-idle" onclick="setState('IDLE')">☀️ IDLE (Passive Block)</button>
+        <button class="state-btn" id="btn-night" onclick="setState('NIGHT_FLUSH')">🌙 NIGHT FLUSH (Cooling)</button>
+        <button class="state-btn" id="btn-desic" onclick="setState('DESICCANT')">💧 DESICCANT (Dry Air)</button>
+
+        <div class="hardware-status" id="status-box">
+            System Idle. Door Closed. Solid state PCM absorbing thermal load.
+        </div>
+    </div>
+
+    <script>
+        // --- Setup Scene ---
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0a0a0c, 0.015);
+
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.maxPolarAngle = Math.PI / 2 - 0.05;
+
+        // --- Lighting ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        sunLight.position.set(15, 25, 10);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
+        scene.add(sunLight);
+
+        const interiorLight = new THREE.PointLight(0xffddaa, 0, 15);
+        interiorLight.position.set(0, 3, 0);
+        scene.add(interiorLight);
+
+        // --- Environment ---
+        const floor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.8 }));
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        const grid = new THREE.GridHelper(100, 50, 0x333333, 0x222222);
+        grid.position.y = 0.01;
+        scene.add(grid);
+
+        // --- Materials ---
+        // Real World Material: Solid white MgO-PVDF coating
+        const matReal = new THREE.MeshStandardMaterial({ color: 0xf5f5f5, roughness: 0.3, metalness: 0.1 });
+        // Hackathon Material: Translucent Blue to show PCM and hardware
+        const matXray = new THREE.MeshPhysicalMaterial({ color: 0x88bbff, transparent: true, opacity: 0.3, roughness: 0.2, side: THREE.DoubleSide });
+
+        const matFrame = new THREE.MeshStandardMaterial({ color: 0x333333 });
+
+        // Array to hold wall meshes for toggling materials
+        const wallMeshes = [];
+
+        // --- Build Shelter ---
+        const podGroup = new THREE.Group();
+
+        // Floor & Roof
+        const podFloor = new THREE.Mesh(new THREE.BoxGeometry(10, 0.4, 8), matFrame);
+        podFloor.position.y = 0.2;
+        podFloor.receiveShadow = true;
+        podGroup.add(podFloor);
+
+        const podRoof = new THREE.Mesh(new THREE.BoxGeometry(10, 0.4, 8), matReal); // Roof is always solid
+        podRoof.position.y = 5.8;
+        podRoof.castShadow = true;
+        podGroup.add(podRoof);
+
+        // Walls (Left, Right, Back)
+        const wallLeft = new THREE.Mesh(new THREE.BoxGeometry(0.4, 5.2, 7.6), matXray);
+        wallLeft.position.set(-4.8, 3, 0);
+        wallLeft.castShadow = true;
+        wallMeshes.push(wallLeft);
+        podGroup.add(wallLeft);
+
+        const wallRight = new THREE.Mesh(new THREE.BoxGeometry(0.4, 5.2, 7.6), matXray);
+        wallRight.position.set(4.8, 3, 0);
+        wallRight.castShadow = true;
+        wallMeshes.push(wallRight);
+        podGroup.add(wallRight);
+
+        // Back Wall (Holds Hardware)
+        const wallBack = new THREE.Mesh(new THREE.BoxGeometry(9.2, 5.2, 0.4), matFrame);
+        wallBack.position.set(0, 3, -3.8);
+        wallBack.castShadow = true;
+        podGroup.add(wallBack);
+
+        // Front Wall Pieces (Leaving room for door)
+        const wallFrontLeft = new THREE.Mesh(new THREE.BoxGeometry(3, 5.2, 0.4), matXray);
+        wallFrontLeft.position.set(-3.3, 3, 3.8);
+        wallMeshes.push(wallFrontLeft);
+        podGroup.add(wallFrontLeft);
+
+        const wallFrontRight = new THREE.Mesh(new THREE.BoxGeometry(3, 5.2, 0.4), matXray);
+        wallFrontRight.position.set(3.3, 3, 3.8);
+        wallMeshes.push(wallFrontRight);
+        podGroup.add(wallFrontRight);
+
+        const wallFrontTop = new THREE.Mesh(new THREE.BoxGeometry(3.6, 1.2, 0.4), matXray);
+        wallFrontTop.position.set(0, 5, 3.8);
+        wallMeshes.push(wallFrontTop);
+        podGroup.add(wallFrontTop);
+
+        // --- Interactive Door/Gate ---
+        const doorGroup = new THREE.Group();
+        doorGroup.position.set(-1.8, 0.4, 3.8); // Position at the left hinge
+
+        // Offset the door mesh so it pivots on the edge
+        const doorMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 4, 0.2), new THREE.MeshStandardMaterial({ color: 0x555555 }));
+        doorMesh.position.set(1.8, 2, 0); // Shift right by half width
+        doorMesh.castShadow = true;
+
+        // Handle
+        const handle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.8, 0.3), new THREE.MeshStandardMaterial({ color: 0xaaaaaa }));
+        handle.position.set(3.2, 2, 0.1);
+        doorMesh.add(handle);
+
+        doorGroup.add(doorMesh);
+        podGroup.add(doorGroup);
+
+        // --- Hardware ---
+        const hardwareMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
+
+        // Vent Flap Hinge
+        const ventGroup = new THREE.Group();
+        ventGroup.position.set(0, 4.8, -3.9);
+        const flap = new THREE.Mesh(new THREE.BoxGeometry(4, 1.5, 0.1), new THREE.MeshStandardMaterial({ color: 0x777777 }));
+        flap.position.y = -0.75;
+        ventGroup.add(flap);
+        podGroup.add(ventGroup);
+
+        // Fans
+        const fanNight = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.3, 16), hardwareMat);
+        fanNight.rotation.x = Math.PI / 2;
+        fanNight.position.set(-1.5, 2.5, -3.8);
+        podGroup.add(fanNight);
+
+        const fanDesic = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.3, 16), hardwareMat);
+        fanDesic.rotation.x = Math.PI / 2;
+        fanDesic.position.set(1.5, 2.5, -3.8);
+        podGroup.add(fanDesic);
+
+        // --- Human Scale Mannequins ---
+        function createHuman(colorHex, x, z, rotateY) {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.8 });
+
+            // Body
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.25, 1.3, 16), mat);
+            body.position.y = 0.65 + 0.4; // Lift off ground
+            body.castShadow = true;
+            group.add(body);
+
+            // Head
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 16), mat);
+            head.position.y = 1.3 + 0.4 + 0.22;
+            head.castShadow = true;
+            group.add(head);
+
+            group.position.set(x, 0, z);
+            group.rotation.y = rotateY;
+            return group;
+        }
+
+        // Add 4 people inside, 1 walking in
+        podGroup.add(createHuman(0x3498db, -2, -1, Math.PI / 4));
+        podGroup.add(createHuman(0xe74c3c, 2, -1.5, -Math.PI / 6));
+        podGroup.add(createHuman(0x2ecc71, -1, -2.5, Math.PI));
+        podGroup.add(createHuman(0xf1c40f, 1.5, 1, -Math.PI / 2));
+
+        // Person walking in the door
+        const enteringPerson = createHuman(0x9b59b6, 0, 5, Math.PI);
+        podGroup.add(enteringPerson);
+
+        scene.add(podGroup);
+
+        // --- Animation Variables ---
+        let targetVentAngle = 0;
+        let nightFanSpeed = 0;
+        let desicFanSpeed = 0;
+        let targetDoorAngle = 0;
+
+        // Camera Tweening targets
+        let targetCamPos = new THREE.Vector3(12, 8, 18);
+        let targetCamLook = new THREE.Vector3(0, 2, 0);
+        let currentCamLook = new THREE.Vector3(0, 2, 0);
+
+        // Initialize Camera
+        camera.position.copy(targetCamPos);
+        controls.target.copy(currentCamLook);
+
+        // --- Logic Functions ---
+        window.setState = function (state) {
+            document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+            const statusBox = document.getElementById('status-box');
+
+            if (state === 'IDLE') {
+                document.getElementById('btn-idle').classList.add('active');
+                targetVentAngle = 0;
+                nightFanSpeed = 0;
+                desicFanSpeed = 0;
+                interiorLight.intensity = 0;
+                statusBox.innerText = "System Idle. ESP32 standing by. Solid state PCM is passively absorbing outside thermal load.";
+                statusBox.style.borderLeftColor = "#888";
+            }
+            else if (state === 'NIGHT_FLUSH') {
+                document.getElementById('btn-night').classList.add('active');
+                targetVentAngle = -Math.PI / 2; // Open 90 degrees
+                nightFanSpeed = 0.4;
+                desicFanSpeed = 0;
+                interiorLight.intensity = 1.5; // Turn on lights inside
+                statusBox.innerText = "Night Flush Active! Servo opened to 90°. Intake fan blasting outside air to refreeze PCM walls.";
+                statusBox.style.borderLeftColor = "#3498db";
+            }
+            else if (state === 'DESICCANT') {
+                document.getElementById('btn-desic').classList.add('active');
+                targetVentAngle = -Math.PI / 4; // Open 45 degrees
+                nightFanSpeed = 0;
+                desicFanSpeed = 0.2;
+                interiorLight.intensity = 0;
+                statusBox.innerText = "Desiccant Active. Humidity threshold breached. Dehumidifier fan scrubbing air to lower Heat Index.";
+                statusBox.style.borderLeftColor = "#e74c3c";
+            }
+        };
+
+        window.setCamera = function (view) {
+            document.getElementById('btn-view-out').classList.remove('active');
+            document.getElementById('btn-view-in').classList.remove('active');
+
+            if (view === 'OUTSIDE') {
+                document.getElementById('btn-view-out').classList.add('active');
+                targetCamPos.set(12, 8, 18);
+                targetCamLook.set(0, 2, 0);
+                targetDoorAngle = 0; // Close door
+            } else {
+                document.getElementById('btn-view-in').classList.add('active');
+                targetCamPos.set(0, 3, 2); // Move camera inside
+                targetCamLook.set(0, 2.5, -4); // Look at the hardware panel
+                targetDoorAngle = -Math.PI / 1.5; // Swing door open wide
+            }
+        };
+
+        window.setMaterial = function (matType) {
+            document.getElementById('btn-mat-real').classList.remove('active');
+            document.getElementById('btn-mat-xray').classList.remove('active');
+
+            if (matType === 'REAL') {
+                document.getElementById('btn-mat-real').classList.add('active');
+                wallMeshes.forEach(mesh => mesh.material = matReal);
+            } else {
+                document.getElementById('btn-mat-xray').classList.add('active');
+                wallMeshes.forEach(mesh => mesh.material = matXray);
+            }
+        };
+
+        // --- Render Loop ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Hardware Animations
+            ventGroup.rotation.x += (targetVentAngle - ventGroup.rotation.x) * 0.05;
+            doorGroup.rotation.y += (targetDoorAngle - doorGroup.rotation.y) * 0.05;
+            fanNight.rotation.y += nightFanSpeed;
+            fanDesic.rotation.y += desicFanSpeed;
+
+            // Smooth Camera Tweening
+            camera.position.lerp(targetCamPos, 0.03);
+            currentCamLook.lerp(targetCamLook, 0.03);
+            controls.target.copy(currentCamLook);
+
+            // Subtle person animation (walking in)
+            if (targetDoorAngle < -0.5) {
+                // If door is open, move the person inside
+                enteringPerson.position.z += (-2 - enteringPerson.position.z) * 0.02;
+            } else {
+                // Move back outside
+                enteringPerson.position.z += (5 - enteringPerson.position.z) * 0.02;
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+
+        animate();
+    </script>
+</body>
+
+</html>
